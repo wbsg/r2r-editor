@@ -1,0 +1,301 @@
+@scripts = {
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery-ui-1.8.16.custom.min.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.treeview.min.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.jsPlumb-1.3.7-all.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/jquery.rdfquery.core-1.0.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/backend.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/editor.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/rdf_store.js")"></script>
+    <script type="text/javascript" src="@routes.Assets.at("javascripts/vocabularymanagement.js")"></script>
+}
+
+@styles = {
+    <link type="text/css" href="@routes.Assets.at("stylesheets/main.css")" rel="stylesheet"/>
+    <link type="text/css" href="@routes.Assets.at("stylesheets/smoothness/jquery-ui-1.8.16.custom.css")" rel="stylesheet"/>
+    <link type="text/css" href="@routes.Assets.at("stylesheets/editor.css")" rel="stylesheet"/>
+    <link type="text/css" href="@routes.Assets.at("stylesheets/treeview/jquery.treeview.css")" rel="stylesheet"/>
+}
+
+@main("R2R", scripts, styles) {
+
+<script type="text/javascript" src="@routes.Assets.at("javascripts/wz_tooltip.js")"></script>
+<script type="text/javascript" src="@routes.Assets.at("javascripts/transformations.js")"></script>
+
+<div id="content">
+
+    <div id="header">
+        <div class="header-box">
+            <div class="header-box-content">
+                <div id="header-title">R2R Editor</div>
+                <div id="header-buttons">
+                    <button type="button" onclick="clearPanel();">Clear panel</button>
+                    <button type="button" onclick="editPrefixes();">Edit prefixes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <div id="sidebar">
+
+        <div id="expand-sidebar"></div>
+
+        <div id="sources-box" class="box">
+            <div class="box-title">Sources</div>
+            <input type="text" id="source-search" name="searchString" class="search-input" value="">
+            <fieldset id="sourceRadio">
+                <input type="radio" id="source-filter1" name="source-filter" value="all" checked="checked"><label for="source-filter1">all</label>
+                <input type="radio" id="source-filter2" name="source-filter" value="mapped"><label for="source-filter2">mapped</label>
+                <input type="radio" id="source-filter3" name="source-filter" value="unmapped"><label for="source-filter3">unmapped</label>
+            </fieldset>
+            <div class="box-content">
+                <ul id="sources" class="filetree"></ul>
+            </div>
+            <div class="box-buttons">
+                <div style="float:right">
+                    <div id="source-voc-load-button" class="load button"></div>
+                    <div class="select-all button" onclick="selectAllSources();"></div>
+                    <div class="add-item button" onclick="addSourceItem();"></div>
+                    <div style="clear: both;"></div>
+                </div>
+                <div id="sources-prefix" class="prefix-filter">
+                    Show: <select><option value="uris">whole uris</option><option value="prefixes">prefixes and labels</option><option value="labels">only labels</option></select>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+
+        <div id="mappings-box" class="box">
+            <div class="box-title">Mappings</div>
+            <div class="box-content" style="min-height:80px; max-height:160px;">
+                <ul id="mappings" class="filetree"></ul>
+            </div>
+            <div class="box-buttons">
+                <div class="remove-mapping button" onclick="removeMapping();"></div>
+                <div class="edit-mapping button" onclick="editMapping();"></div>
+                <div class="select-all button" onclick="selectAllMappings();"></div>
+                <div class="add-item button" onclick="addMappingItem();"></div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+
+    </div>
+    
+    <div id="sidebar-right">
+
+        <div id="expand-sidebar-right"></div>
+
+        <div id="targets-box" class="box">
+            <div class="box-title">Targets</div>
+            <input type="text" id="target-search" name="searchString" class="search-input" value="">
+            <fieldset id="targetRadio">
+                <input type="radio" id="target-filter1" name="target-filter" value="all" checked="checked"><label for="target-filter1">all</label>
+                <input type="radio" id="target-filter2" name="target-filter" value="mapped"><label for="target-filter2">mapped</label>
+                <input type="radio" id="target-filter3" name="target-filter" value="unmapped"><label for="target-filter3">unmapped</label>
+            </fieldset>
+            <div class="box-content">
+                <ul id="targets" class="filetree"></ul>
+            </div>
+            <div class="box-buttons" style="float:left">
+                <div style="float:left">
+                    <div class="add-item-right button" onclick="addTargetItem();"></div>
+                    <div class="select-all button" onclick="selectAllTargets();"></div>
+                    <div id="target-voc-load-button" class="load button"></div>
+                    <div class="add-icon button" onclick="openTargetForm()"></div>
+                </div>
+                <div id="targets-prefix" class="prefix-filter">
+                    Show: <select><option value="uris">whole uris</option><option value="prefixes">prefixes and labels</option><option value="labels">only labels</option></select>
+                </div>
+            </div>
+            <div style="clear:both"></div>
+        </div>
+
+    </div>
+
+
+    <div id="panel">
+        <div id="source">
+            <div class="item-header">Source</div>
+            <div class="items"></div>
+        </div>
+        <div id="target">
+            <div class="item-header">Target</div>
+            <div class="items"></div>
+        </div>
+    </div>
+
+    <div style="clear:both"></div>
+
+    <div id="status-message">Status</div>
+
+</div>
+<!-- /content -->
+
+
+<!-- dialogs -->
+<div style="display:none">
+
+
+    <div class="dialog" id="prefixes-form">
+
+        <div id="prefixes">
+            prefix <input type="text" name="prefix" style="width:70px" class="text ui-widget-content ui-corner-all" value="r2r"/> : <input type="text" name="uri" style="width:360px" class="text ui-widget-content ui-corner-all" value="http://www4.wiwiss.fu-berlin.de/bizer/r2r/"/>
+        </div>
+        <div id="next-prefixes"></div>
+        <button style="float:left" onclick="addPrefixInput()">Add</button>
+
+    </div>
+
+    <div class="dialog" id="load-vocabulary-form">
+        <div class="input-label" style="width: 180px;">Vocabulary location</div>
+        <input id="vocabularyURI" type="text" name="uri" style="width: 480px" class="text ui-widget-content ui-corner-all" value=""/>
+    </div>
+
+    <div class="dialog" id="add-target-form">
+
+        <div class="input-label" style="width: 120px;">URI</div>
+        <input type="text" id="targetName" class="text ui-widget-content ui-corner-all"/>
+        <span class="help"></span>
+
+        <div style="clear: both;"></div>
+
+        <div class="input-label" style="width: 120px;">Item type</div>
+        <select id="targetType" class="text ui-widget-content ui-corner-all">
+            <option value="class">Class</option>
+            <option value="property">Property</option>
+        </select>
+        <span class="help"></span>
+
+        <div style="clear: both;"></div>
+
+        <div class="input-label" style="width: 120px;">Parent Class</div>
+        <select id="parentClass" class="text ui-widget-content ui-corner-all">
+            <option value="-1">Thing</option>
+        </select>
+        <span class="help"></span>
+
+    </div>
+        
+
+    <div class="dialog" id="edit-mapping-form">
+
+        <div class="mode" id="easy-mode">
+
+            <div id="mapping-tree" class="ui-corner-all"></div>
+
+            <div>
+                <button type="button" id="add-transformation-button">Add Transformation</button>
+            </div>
+
+            <div id="transformation-form" style="display: none">
+
+                <div style="width:632px">
+                       <span id="variables" style="float:left">
+                               Variables you can use: <span class="variable">?SUBJ</span>
+                       </span>
+                </div>
+                <div style="clear:both"></div>
+
+                <div style="height:30px; margin-bottom: 18px;">
+                    <div id="transformation-var"></div>
+                    <div id="transformation-input">
+                        <textarea>abc</textarea>
+                    </div>
+                    <div id="transformation-button">
+                        <button type="button" id="update-transformation">Create</button>
+                    </div>
+                </div>
+                <div style="clear:both"></div>
+
+                <div id="transformation-reference">
+                    <div>
+                        <input type="text" id="transformation-search" name="searchString" class="search-input" value="">
+                    </div>
+                    <div>
+                        <select id="transformations" size="15"></select>
+                    </div>
+                </div>
+
+                <div id="transformation-info">
+                    <div id="transformation-desc" class="description ui-corner-all"></div>
+                    <div id="transformation-examples" class="description ui-corner-all">Examples:</div>
+                    <div id="descriptions" style="display: none"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="mode" id="expert-mode" style="display:none">
+
+            <div id="mapping-form-tabs" class="tabs">
+
+                <ul>
+                    <li><a href="#edit-tab">Edit</a></li>
+                    <li><a href="#source-tab">View Source</a></li>
+                </ul>
+
+                <div id="edit-tab">
+
+                    <div class="input-label" style="width: 120px;">Mapping Name</div>
+                    <input type="text" name="name" class="text ui-widget-content ui-corner-all"/>
+                    <span class="help"></span>
+
+                    <div style="clear: both;"></div>
+
+                    <div class="input-label" style="width: 120px;">Mapping Type</div>
+                    <input type="text" name="type" class="text ui-widget-content ui-corner-all"/>
+                    <span class="help"></span>
+
+                    <div style="clear: both;"></div>
+
+                    <div class="input-label" style="width: 120px;">Mapping Ref</div>
+                    <input type="text" name="mappingRef" class="text ui-widget-content ui-corner-all"/>
+                    <span class="help"></span>
+
+                    <div style="clear: both;"></div>
+
+                    <div class="input-label" style="width: 120px;">Source Pattern</div>
+                    <textarea id="sourcePattern" class="text ui-widget-content ui-corner-all"></textarea>
+                    <span class="help"></span>
+
+                    <div style="clear: both;"></div>
+
+                    <div id="target-patterns-inputs">
+                        <div class="input-label" style="width: 120px;">Target Pattern</div>
+                        <input type="text" name="targetPattern" class="text ui-widget-content ui-corner-all"/>
+                        <span class="help"></span>
+
+                        <div style="clear: both;"></div>
+                    </div>
+                    <button class="add-button" onclick="addTargetPatternInput()">Add</button>
+                    <div style="clear: both;"></div>
+
+                    <div id="transformation-inputs">
+                        <div class="input-label" style="width: 120px;">Transformation</div>
+                        <input type="text" name="transformation" class="text ui-widget-content ui-corner-all"/>
+                        <span class="help"></span>
+
+                        <div style="clear: both;"></div>
+                    </div>
+                    <button class="add-button" onclick="addTransformationInput()">Add</button>
+                    <div style="clear: both;"></div>
+
+                </div>
+
+                <div id="source-tab">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<div id="jsplumb"></div>
+}

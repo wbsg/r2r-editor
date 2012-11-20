@@ -1,0 +1,7 @@
+Getting started:
+
+1. Get and install the Play Framework version 2.x (http://www.playframework.org/)
+2. Type in R2R editor directory: play run
+3. Browse to http://localhost:9000/ and enjoy the R2R editor!
+
+Note: The database is by default located under /tmp/playdata, which will be deleted on reboot. To change the location modify the db.default.db entry in the file conf/application.conf accordingly.

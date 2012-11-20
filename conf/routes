@@ -1,0 +1,36 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                           controllers.Application.index
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.at(path="/public", file)
+
+
+# R2R
+
+GET     /r2r                        controllers.Application.r2r
+
+GET     /mapping                     controllers.Application.mappings
+
+GET     /mapping/                     controllers.Application.mappings
+
+GET     /mapping/:name               controllers.Application.getMapping(name: String)
+
+PUT     /mapping                     controllers.Application.saveMapping
+
+DELETE  /mapping/:name               controllers.Application.deleteMapping(name: String)
+
+GET     /prefix                      controllers.Application.prefixes
+
+GET     /prefix/:prefix              controllers.Application.getPrefix(prefix: String)
+
+DELETE  /prefix/:prefix              controllers.Application.deletePrefix(prefix: String)
+
+PUT     /prefix                      controllers.Application.savePrefixes
+
+GET     /vocabulary                  controllers.Application.vocabulary(url: String)
+
+POST    /validateTransformation      controllers.Application.validateTransformation
